@@ -1,0 +1,47 @@
+{
+  "name": "openlens-backend",
+  "version": "1.0.0",
+  "description": "OpenLens OSS Inventory Backend",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "worker": "node src/worker.js",
+    "worker:dev": "node --watch src/worker.js",
+    "migrate": "knex migrate:latest --knexfile src/database/knexfile.js",
+    "migrate:rollback": "knex migrate:rollback --knexfile src/database/knexfile.js",
+    "seed": "knex seed:run --knexfile src/database/knexfile.js",
+    "test": "jest --detectOpenHandles",
+    "test:watch": "jest --watch",
+    "lint": "eslint src --fix"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.0.0",
+    "helmet": "^7.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "knex": "^3.1.0",
+    "pg": "^8.11.3",
+    "redis": "^4.6.11",
+    "bullmq": "^5.1.7",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "axios": "^1.6.2",
+    "winston": "^3.11.0",
+    "joi": "^17.11.0",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3",
+    "eslint": "^8.54.0",
+    "@eslint/js": "^8.54.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}

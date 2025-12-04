@@ -1,0 +1,187 @@
+openapi: 3.0.0
+info:
+  title: OpenLens API
+  version: 1.0.0
+  description: OSS Inventory Management API
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Local development
+
+paths:
+  /auth/register:
+    post:
+      summary: Register new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  user:
+                    $ref: '#/components/schemas/User'
+
+  /auth/login:
+    post:
+      summary: Login user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Login successful
+
+  /libraries:
+    get:
+      summary: List libraries
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          schema:
+            type: integer
+        - name: q
+          in: query
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Libraries list
+    post:
+      summary: Create library
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Library'
+      responses:
+        '201':
+          description: Library created
+
+  /libraries/{id}:
+    get:
+      summary: Get library details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Library details
+
+  /imports:
+    post:
+      summary: Upload import file
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: File uploaded
+
+  /reconciliation:
+    get:
+      summary: List reconciliation items
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Reconciliation queue
+
+  /vulnerabilities:
+    get:
+      summary: List vulnerabilities
+      parameters:
+        - name: severity
+          in: query
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Vulnerabilities list
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
+          enum: [admin, user]
+
+    Library:
+      type: object
+      properties:
+        name:
+          type: string
+        version:
+          type: string
+        purl:
+          type: string
+        license_declared:
+          type: string
+        license_detected:
+          type: string
+        owner:
+          type: string
+        environment:
+          type: string
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
