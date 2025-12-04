@@ -77,8 +77,7 @@ app.use(errorHandler);
 const startServer = async () => {
   const connected = await testConnection();
   if (!connected) {
-    logger.error('Cannot start server: database connection failed');
-    process.exit(1);
+    logger.warn('Database connection failed on startup - will retry on first request');
   }
 
   app.listen(PORT, () => {
